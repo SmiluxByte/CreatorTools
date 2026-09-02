@@ -4,6 +4,12 @@ Patchglass is a local Roblox update-icon maker. Drop in a game icon, choose an h
 
 Repository: [github.com/SmiluxByte/IconMaker](https://github.com/SmiluxByte/IconMaker)
 
+## Use it online
+
+Open [Patchglass in your browser](https://smiluxbyte.github.io/IconMaker/). No Node.js or installation is needed for the online version.
+
+The site is deployed from `main` with GitHub Pages. Developers can still run the project locally using the instructions below.
+
 ## Features
 
 - Local PNG, JPG and JPEG upload with drag and drop
