@@ -2,6 +2,7 @@ export const CANVAS_SIZE = 512;
 
 export type FontId =
   | "arial-black"
+  | "montserrat"
   | "fredoka"
   | "luckiest-guy"
   | "bangers"
@@ -9,7 +10,8 @@ export type FontId =
   | "russo-one"
   | "press-start-2p"
   | "anton"
-  | "permanent-marker";
+  | "permanent-marker"
+  | "comic-neue";
 
 export interface FontOption {
   id: FontId;

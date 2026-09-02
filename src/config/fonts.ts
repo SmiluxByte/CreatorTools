@@ -2,6 +2,7 @@ import type { FontId, FontOption } from "../types";
 
 export const FONT_OPTIONS: FontOption[] = [
   { id: "arial-black", label: "Arial Black", family: "Arial Black, Arial, sans-serif" },
+  { id: "montserrat", label: "Montserrat", family: "Montserrat, Arial, sans-serif" },
   { id: "fredoka", label: "Fredoka", family: "Fredoka, Arial, sans-serif" },
   { id: "luckiest-guy", label: "Luckiest Guy", family: "Luckiest Guy, Impact, sans-serif" },
   { id: "bangers", label: "Bangers", family: "Bangers, Impact, sans-serif" },
@@ -14,6 +15,7 @@ export const FONT_OPTIONS: FontOption[] = [
     label: "Permanent Marker",
     family: "Permanent Marker, Comic Sans MS, cursive",
   },
+  { id: "comic-neue", label: "Comic Neue", family: "Comic Neue, Comic Sans MS, cursive" },
 ];
 
 export function getFontFamily(fontId: FontId): string {
