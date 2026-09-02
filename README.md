@@ -25,7 +25,7 @@ The site is deployed from `main` with GitHub Pages. Developers can still run the
 
 ## Run it
 
-You need Node.js 20 or newer.
+You need Node.js 22 or newer for local development.
 
 ```bash
 pnpm install
