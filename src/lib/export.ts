@@ -35,13 +35,19 @@ export function getStageFilename(label: string): string {
 export async function createSequenceZip(
   frames: Pick<SequenceFrame, "filename" | "blob">[],
 ): Promise<Blob> {
-  if (frames.length === 0) {
+  return createFilesZip(frames);
+}
+
+export async function createFilesZip(
+  files: Pick<SequenceFrame, "filename" | "blob">[],
+): Promise<Blob> {
+  if (files.length === 0) {
     throw new Error("There are no rendered frames to package.");
   }
 
   const zip = new JSZip();
-  for (const frame of frames) {
-    zip.file(frame.filename, await frame.blob.arrayBuffer());
+  for (const file of files) {
+    zip.file(file.filename, await file.blob.arrayBuffer());
   }
 
   return zip.generateAsync({

@@ -15,6 +15,7 @@ export function UploadPanel({
 }: UploadPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   function openPicker() {
     if (!disabled) {
@@ -22,29 +23,41 @@ export function UploadPanel({
     }
   }
 
-  function handleFiles(files: FileList | null) {
+  async function handleFiles(files: FileList | null): Promise<void> {
     const file = files?.[0];
-    if (file) {
-      void onFile(file);
+    if (!file || disabled || isLoading) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await onFile(file);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <section className="control-section upload-section" aria-labelledby="source-heading">
+    <section className="control-section upload-section" aria-labelledby="source-heading" aria-busy={isLoading}>
       <div className="section-label" id="source-heading">
         Source image
       </div>
       <div
-        className={"drop-zone" + (isDragging ? " is-dragging" : "") + (disabled ? " is-disabled" : "")}
+        className={
+          "drop-zone" +
+          (isDragging ? " is-dragging" : "") +
+          (disabled || isLoading ? " is-disabled" : "") +
+          (isLoading ? " is-loading" : "")
+        }
         onDragEnter={(event) => {
           event.preventDefault();
-          if (!disabled) {
+          if (!disabled && !isLoading) {
             setIsDragging(true);
           }
         }}
         onDragOver={(event) => {
           event.preventDefault();
-          if (!disabled) {
+          if (!disabled && !isLoading) {
             event.dataTransfer.dropEffect = "copy";
             setIsDragging(true);
           }
@@ -57,19 +70,19 @@ export function UploadPanel({
         onDrop={(event) => {
           event.preventDefault();
           setIsDragging(false);
-          if (!disabled) {
-            handleFiles(event.dataTransfer.files);
+          if (!disabled && !isLoading) {
+            void handleFiles(event.dataTransfer.files);
           }
         }}
       >
         <div className="drop-zone__icon" aria-hidden="true">
-          <span>+</span>
+          <span>{isLoading ? "…" : "+"}</span>
         </div>
         <div className="drop-zone__copy">
-          <strong>{sourceName ? "Replace image" : "Drop an image here"}</strong>
-          <span>PNG or JPG · max 25 MB</span>
+          <strong>{isLoading ? "Reading image…" : sourceName ? "Replace image" : "Drop an image here"}</strong>
+          <span>{isLoading ? "Processing locally…" : "PNG or JPG · max 25 MB"}</span>
         </div>
-        <button type="button" className="button button--soft button--small" onClick={openPicker} disabled={disabled}>
+        <button type="button" className="button button--soft button--small" onClick={openPicker} disabled={disabled || isLoading}>
           Browse
         </button>
         <input
@@ -80,15 +93,15 @@ export function UploadPanel({
           aria-hidden="true"
           type="file"
           accept="image/png,image/jpeg,.png,.jpg,.jpeg"
-          disabled={disabled}
+          disabled={disabled || isLoading}
           onChange={(event) => {
-            handleFiles(event.target.files);
+            void handleFiles(event.target.files);
             event.target.value = "";
           }}
         />
       </div>
       {sourceName && (
-        <div className="source-meta">
+        <div className="source-meta" key={sourceName}>
           <span className="source-meta__dot" aria-hidden="true" />
           <span className="source-meta__name" title={sourceName}>
             {sourceName}

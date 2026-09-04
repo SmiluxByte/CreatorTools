@@ -1,7 +1,7 @@
 {
   "name": "patchglass",
   "version": "0.1.0",
-  "description": "A local Roblox update icon maker.",
+  "description": "Local browser tools for Roblox and game-asset images.",
   "type": "module",
   "private": false,
   "engines": {

@@ -1,6 +1,6 @@
 # Patchglass
 
-Patchglass is a local Roblox update-icon maker. Drop in a game icon, choose an hourglass and countdown text, then export one 512 × 512 PNG or the complete seven-stage sequence.
+Patchglass is a local browser toolkit for Roblox and game-asset images. The Hourglass tool creates countdown update graphics; Batch Resize and Batch Stroke handle multiple images at once.
 
 Repository: [github.com/SmiluxByte/IconMaker](https://github.com/SmiluxByte/IconMaker)
 
@@ -21,6 +21,12 @@ The site is deployed from `main` with GitHub Pages. Developers can still run the
 - Optional per-stage overrides when automation is enabled
 - Local browser presets
 - Individual sequence downloads and a seven-image ZIP
+- Batch resize with fixed and custom dimensions
+- Contain, cover and stretch modes for resizing
+- Alpha-based batch strokes with adjustable color, size and opacity
+- Optional resize-before-stroke for icons such as 1512 × 1512 → 256 × 256
+- Batch previews and ZIP export for every image tool
+- RBX Source Extractor for local `.rbxlx` and `.rbxmx` place/model files
 - No account, backend or image upload required
 
 ## Run it
@@ -74,6 +80,12 @@ When enabled, the default mapping is:
 | 1H / 30M / NOW! | Empty |
 
 The solid/outline style can be switched globally. Any stage can still be changed manually without changing the normal icon picker behavior.
+
+## RBX Source Extractor
+
+Save a Roblox place or model as XML (`.rbxlx` or `.rbxmx`), open **RBX Source Extractor**, and drop the file into the page. The tool keeps the Roblox instance folders and lists every `Script`, `LocalScript`, and `ModuleScript` with its full path.
+
+You can copy a single script, copy an LLM-ready bundle, download a text bundle, or download a ZIP containing the source files, hierarchy, and manifest. Parsing happens in the browser only; the code is never executed or uploaded. Binary `.rbxl` and `.rbxm` files are not supported by the static browser build.
 
 ## Privacy and scope
 

@@ -1,3 +1,5 @@
+import { ElasticSlider } from "./ElasticSlider";
+
 interface ControlRangeProps {
   id: string;
   label: string;
@@ -32,16 +34,16 @@ export function ControlRange({
           {suffix}
         </output>
       </div>
-      <input
+      <ElasticSlider
         id={id}
-        type="range"
+        label={label}
+        value={value}
         min={min}
         max={max}
         step={step}
-        value={value}
+        valueText={value + suffix}
         disabled={disabled}
-        onChange={(event) => onChange(Number(event.target.value))}
-        aria-valuetext={value + suffix}
+        onChange={onChange}
       />
       {hint && <p className="control-hint">{hint}</p>}
     </div>

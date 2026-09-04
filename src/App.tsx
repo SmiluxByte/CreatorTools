@@ -3,14 +3,21 @@ import { HOURGLASS_ASSETS } from "./config/assets";
 import { COUNTDOWN_STAGES } from "./config/countdown";
 import { FONT_OPTIONS } from "./config/fonts";
 import { DEFAULT_SETTINGS } from "./config/settings";
-import { BrandMark } from "./components/BrandMark";
+import { BatchImageTool } from "./components/BatchImageTool";
 import { ControlRange } from "./components/ControlRange";
 import { FrameDialog } from "./components/FrameDialog";
 import { PresetControls } from "./components/PresetControls";
 import { PreviewCanvas } from "./components/PreviewCanvas";
+import { RbxScriptExtractor } from "./components/RbxScriptExtractor";
 import { SequenceAutomationControls } from "./components/SequenceAutomationControls";
 import { SequenceGallery } from "./components/SequenceGallery";
+import { SplitText } from "./components/SplitText";
 import { UploadPanel } from "./components/UploadPanel";
+import {
+  TOOL_DEFINITIONS,
+  ToolNavigation,
+  type ToolId,
+} from "./components/ToolNavigation";
 import {
   createSequenceZip,
   downloadBlob,
@@ -83,9 +90,17 @@ export default function App() {
   const [downloadMessage, setDownloadMessage] = useState<string | null>(null);
   const [openFrame, setOpenFrame] = useState<SequenceFrame | null>(null);
   const [showFloatingPreview, setShowFloatingPreview] = useState(false);
+  const [activeTool, setActiveTool] = useState<ToolId | null>(null);
   const selectedAsset = HOURGLASS_ASSETS.find((asset) => asset.id === settings.hourglassId);
   const selectedAssetImage = selectedAsset ? assetImages[selectedAsset.id] : undefined;
   const selectedAssetStatus = selectedAsset ? assetStatuses[selectedAsset.id] : "missing";
+  const activeDefinition = TOOL_DEFINITIONS.find((tool) => tool.id === activeTool);
+
+  useEffect(() => {
+    document.title = activeDefinition
+      ? `${activeDefinition.label} · Creator Tools`
+      : "Creator Tools · Patchglass";
+  }, [activeDefinition]);
 
   useEffect(() => {
     let cancelled = false;
@@ -411,330 +426,293 @@ export default function App() {
     [settings.stageOverrides, updateSettings],
   );
 
+  const handleToolChange = useCallback((tool: ToolId) => {
+    setActiveTool(tool);
+    setError(null);
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <a className="brand" href="/" aria-label="Patchglass home">
-          <BrandMark className="brand__mark" />
-          <span>
-            <strong>Patchglass</strong>
-            <small>Update icon maker</small>
-          </span>
+    <div className="app-shell creator-tools-app">
+      <header className="app-header app-reveal app-reveal--header">
+        <a className="brand brand--logo" href="#tools" aria-label="Creator Tools home">
+          <img src="/assets/creator-tools-logo.png" alt="Creator Tools" />
         </a>
         <div className="header-tools">
           <span className="header-note">
             <span className="header-pill__dot" aria-hidden="true" />
-            Local render
+            Local only
           </span>
         </div>
       </header>
 
-      <main className="main-content">
-        <section className="intro">
-          <h1>Update icon</h1>
-          <p>
-            Make a 512 × 512 Roblox update icon. Upload an image, add an overlay, and export.
-          </p>
-        </section>
+      <div className="app-layout">
+        <ToolNavigation activeTool={activeTool} onChange={handleToolChange} />
 
-        {error && (
-          <div className="app-alert" role="alert">
-            <span className="app-alert__icon" aria-hidden="true">
-              !
-            </span>
-            <span>{error}</span>
-            <button
-              type="button"
-              className="app-alert__close"
-              onClick={() => setError(null)}
-              aria-label="Dismiss message"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
-        <div className="workbench" id="editor">
-          <aside className="controls-panel panel" aria-labelledby="controls-heading">
-            <div className="panel-topline panel-topline--stacked">
-              <div className="section-label">Settings</div>
-              <h2 id="controls-heading">Editor</h2>
-              <p className="panel-copy">
-                Image processing stays on this device.
-              </p>
-            </div>
-
-            <UploadPanel
-              sourceName={source?.fileName}
-              sourceDimensions={source ? source.width + " × " + source.height : undefined}
-              disabled={busy !== null}
-              onFile={handleFile}
-            />
-
-            <PresetControls
-              presets={presets}
-              activePresetId={activePresetId}
-              disabled={busy !== null}
-              onLoad={handleLoadPreset}
-              onSave={handleSavePreset}
-              onDelete={handleDeletePreset}
-            />
-
-            <section className="control-section" aria-labelledby="overlay-heading">
-              <div className="section-label" id="overlay-heading">
-                Overlay
+        <main className="main-content app-reveal app-reveal--main">
+          {activeTool && activeDefinition ? (
+            <section key={activeTool} className="tool-workspace" aria-labelledby="tool-heading">
+              <div className="tool-workspace__heading">
+                <div className="section-label">Creator Tools / {activeDefinition.label}</div>
+                <h1 id="tool-heading">
+                  {activeTool === "icon-maker"
+                    ? "Hourglass"
+                    : activeTool === "resize"
+                      ? "Batch resize"
+                      : activeTool === "stroke"
+                        ? "Batch stroke"
+                        : "RBX source extractor"}
+                </h1>
+                <p>
+                  {activeTool === "icon-maker"
+                    ? "Make a 512 × 512 Roblox update icon. Upload an image, add an overlay, and export."
+                    : activeTool === "resize"
+                      ? "Resize several images at once without leaving your browser."
+                      : activeTool === "stroke"
+                        ? "Apply one clean outline to several transparent images at once."
+                        : "Open an .rbxlx, keep its folders, and export the scripts for an LLM."}
+                </p>
               </div>
-              <div className="asset-grid">
-                {HOURGLASS_ASSETS.map((asset) => {
-                  const status = assetStatuses[asset.id];
-                  const isSelected = asset.id === settings.hourglassId && status === "ready";
-                  return (
-                    <button
-                      type="button"
-                      className={"asset-card" + (isSelected ? " is-selected" : "")}
-                      key={asset.id}
-                      disabled={busy !== null || status !== "ready"}
-                      onClick={() => handleAssetSelect(asset.id)}
-                      aria-pressed={isSelected}
-                    >
-                      <span className="asset-card__preview">
-                        {status === "ready" ? (
-                          <img src={asset.src} alt="" />
-                        ) : (
-                          <span className="asset-card__slot" aria-hidden="true">
-                            {status === "loading" ? "…" : "＋"}
-                          </span>
-                        )}
+
+              {error && activeTool === "icon-maker" && (
+                    <div className="app-alert" role="alert">
+                      <span className="app-alert__icon" aria-hidden="true">
+                        !
                       </span>
-                      <span className="asset-card__copy">
-                        <strong>{asset.label}</strong>
-                        <small>
-                          {status === "ready"
-                            ? isSelected
-                              ? "Selected"
-                              : "Available"
-                            : status === "loading"
-                              ? "Checking slot"
-                              : "Add PNG to slot"}
-                        </small>
-                      </span>
-                      <span className="asset-card__radio" aria-hidden="true" />
-                    </button>
-                  );
-                })}
-              </div>
+                      <span>{error}</span>
+                      <button
+                        type="button"
+                        className="app-alert__close"
+                        onClick={() => setError(null)}
+                        aria-label="Dismiss message"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
 
-            </section>
+                  <div className="workspace-preview">
+                    {activeTool === "icon-maker" ? (
+                      <div className="workbench" id="editor">
+                        <aside className="controls-panel panel" aria-labelledby="controls-heading">
+                          <div className="panel-topline panel-topline--stacked">
+                            <div className="section-label">Customize</div>
+                            <h2 id="controls-heading">Editor</h2>
+                            <p className="panel-copy">Image processing stays on this device.</p>
+                          </div>
 
-            <section className="control-section" aria-labelledby="text-heading">
-              <div className="section-label" id="text-heading">
-                Countdown
-              </div>
-              <label className="field-label" htmlFor="overlay-text">
-                Text
-              </label>
-              <div className="text-input-wrap">
-                <input
-                  id="overlay-text"
-                  type="text"
-                  value={settings.text}
-                  maxLength={24}
-                  onChange={(event) => updateSettings({ text: event.target.value })}
-                  placeholder="24H"
-                  disabled={busy !== null}
-                />
-                <span>{settings.text.length}/24</span>
-              </div>
-              <label className="field-label" htmlFor="font-choice">
-                Font
-              </label>
-              <select
-                id="font-choice"
-                value={settings.fontId}
-                onChange={(event) => updateSettings({ fontId: event.target.value as FontId })}
-                disabled={busy !== null}
-                style={{ fontFamily: selectedFont?.family }}
-              >
-                {FONT_OPTIONS.map((font) => (
-                  <option key={font.id} value={font.id}>
-                    {font.label}
-                  </option>
-                ))}
-              </select>
-            </section>
+                          <UploadPanel
+                            sourceName={source?.fileName}
+                            sourceDimensions={source ? source.width + " × " + source.height : undefined}
+                            disabled={busy !== null}
+                            onFile={handleFile}
+                          />
 
-            <section className="control-section control-section--sliders" aria-labelledby="adjust-heading">
-              <div className="section-label" id="adjust-heading">
-                Adjustments
-              </div>
-              <ControlRange
-                id="hourglass-size"
-                label="Hourglass size"
-                value={settings.hourglassSize}
-                min={20}
-                max={80}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ hourglassSize: value })}
-              />
-              <ControlRange
-                id="hourglass-position"
-                label="Hourglass position"
-                value={settings.hourglassCenterY}
-                min={10}
-                max={90}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ hourglassCenterY: value })}
-              />
-              <ControlRange
-                id="hourglass-opacity"
-                label="Hourglass opacity"
-                value={settings.hourglassOpacity}
-                min={0}
-                max={100}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ hourglassOpacity: value })}
-              />
-              <ControlRange
-                id="text-size"
-                label="Text size"
-                value={settings.textSize}
-                min={8}
-                max={30}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ textSize: value })}
-              />
-              <ControlRange
-                id="text-position"
-                label="Text position"
-                value={settings.textCenterY}
-                min={55}
-                max={92}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ textCenterY: value })}
-              />
-              <ControlRange
-                id="text-opacity"
-                label="Text opacity"
-                value={settings.textOpacity}
-                min={0}
-                max={100}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ textOpacity: value })}
-              />
-              <ControlRange
-                id="text-stroke-width"
-                label="Text outline size"
-                value={settings.textStrokeWidth}
-                min={0}
-                max={20}
-                suffix="px"
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ textStrokeWidth: value })}
-              />
-              <ControlRange
-                id="text-stroke-opacity"
-                label="Text outline opacity"
-                value={settings.textStrokeOpacity}
-                min={0}
-                max={100}
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ textStrokeOpacity: value })}
-              />
-              <ControlRange
-                id="darken"
-                label="Image darkening"
-                value={settings.darken}
-                min={0}
-                max={100}
-                hint="Affects only the uploaded image."
-                disabled={busy !== null}
-                onChange={(value) => updateSettings({ darken: value })}
-              />
-              <button
-                type="button"
-                className="text-button reset-button"
-                onClick={resetSettings}
-                disabled={busy !== null}
-              >
-                Reset settings
-              </button>
-            </section>
-          </aside>
+                          <PresetControls
+                            presets={presets}
+                            activePresetId={activePresetId}
+                            disabled={busy !== null}
+                            onLoad={handleLoadPreset}
+                            onSave={handleSavePreset}
+                            onDelete={handleDeletePreset}
+                          />
 
-          <div className="preview-column">
-              <PreviewCanvas
-                canvasRef={previewCanvasRef}
-                panelRef={previewPanelRef}
-                hasSource={hasSource}
-                overlayReady={overlayReady}
-                overlayLabel={selectedAsset?.label ?? "Hourglass"}
-                downloadMessage={downloadMessage}
-                isBusy={busy !== null}
-                onBrowse={() => document.getElementById("source-file-input")?.click()}
-                onDownload={() => void handleDownload()}
-              />
-              {hasSource && !overlayReady && (
-                <div className="asset-warning" role="status">
-                  <span aria-hidden="true">•</span>
-                  <div>
-                    <strong>
-                      {selectedAssetStatus === "loading"
-                        ? "Checking overlay files…"
-                        : "No overlay PNG loaded"}
-                    </strong>
-                    <p>Choose an overlay in Settings after adding your PNG.</p>
+                          <section className="control-section" aria-labelledby="overlay-heading">
+                            <div className="section-label" id="overlay-heading">Overlay</div>
+                            <div className="asset-grid">
+                              {HOURGLASS_ASSETS.map((asset) => {
+                                const status = assetStatuses[asset.id];
+                                const isSelected = asset.id === settings.hourglassId && status === "ready";
+                                return (
+                                  <button
+                                    type="button"
+                                    className={"asset-card" + (isSelected ? " is-selected" : "")}
+                                    key={asset.id}
+                                    disabled={busy !== null || status !== "ready"}
+                                    onClick={() => handleAssetSelect(asset.id)}
+                                    aria-pressed={isSelected}
+                                  >
+                                    <span className="asset-card__preview">
+                                      {status === "ready" ? (
+                                        <img src={asset.src} alt="" />
+                                      ) : (
+                                        <span className="asset-card__slot" aria-hidden="true">
+                                          {status === "loading" ? "…" : "＋"}
+                                        </span>
+                                      )}
+                                    </span>
+                                    <span className="asset-card__copy">
+                                      <strong>{asset.label}</strong>
+                                      <small>
+                                        {status === "ready"
+                                          ? isSelected
+                                            ? "Selected"
+                                            : "Available"
+                                          : status === "loading"
+                                            ? "Checking slot"
+                                            : "Add PNG to slot"}
+                                      </small>
+                                    </span>
+                                    <span className="asset-card__radio" aria-hidden="true" />
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </section>
+
+                          <section className="control-section" aria-labelledby="text-heading">
+                            <div className="section-label" id="text-heading">Countdown</div>
+                            <label className="field-label" htmlFor="overlay-text">Text</label>
+                            <div className="text-input-wrap">
+                              <input
+                                id="overlay-text"
+                                type="text"
+                                value={settings.text}
+                                maxLength={24}
+                                onChange={(event) => updateSettings({ text: event.target.value })}
+                                placeholder="24H"
+                                disabled={busy !== null}
+                              />
+                              <span>{settings.text.length}/24</span>
+                            </div>
+                            <label className="field-label" htmlFor="font-choice">Font</label>
+                            <select
+                              id="font-choice"
+                              value={settings.fontId}
+                              onChange={(event) => updateSettings({ fontId: event.target.value as FontId })}
+                              disabled={busy !== null}
+                              style={{ fontFamily: selectedFont?.family }}
+                            >
+                              {FONT_OPTIONS.map((font) => (
+                                <option key={font.id} value={font.id}>{font.label}</option>
+                              ))}
+                            </select>
+                          </section>
+
+                        </aside>
+
+                        <div className="preview-column">
+                          <PreviewCanvas
+                            canvasRef={previewCanvasRef}
+                            canvasKey={`${source?.url ?? "empty"}:${selectedAsset?.id ?? "none"}`}
+                            panelRef={previewPanelRef}
+                            hasSource={hasSource}
+                            overlayReady={overlayReady}
+                            overlayLabel={selectedAsset?.label ?? "Hourglass"}
+                            downloadMessage={downloadMessage}
+                            isBusy={busy !== null}
+                            onBrowse={() => document.getElementById("source-file-input")?.click()}
+                            onDownload={() => void handleDownload()}
+                          />
+                          {hasSource && !overlayReady && (
+                            <div className="asset-warning" role="status">
+                              <span aria-hidden="true">•</span>
+                              <div>
+                                <strong>{selectedAssetStatus === "loading" ? "Checking overlay files…" : "No overlay PNG loaded"}</strong>
+                                <p>Choose an overlay in Settings after adding your PNG.</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <SequenceGallery
+                          id="countdown"
+                          frames={sequence}
+                          canGenerate={canGenerate}
+                          isGenerating={busy === "sequence"}
+                          isZipping={busy === "zip"}
+                          isStale={sequenceStale}
+                          automationControls={
+                            <SequenceAutomationControls
+                              enabled={settings.automateSequenceIcons}
+                              style={settings.hourglassStyle}
+                              stageOverrides={settings.stageOverrides}
+                              disabled={busy !== null}
+                              onEnabledChange={(enabled) => updateSettings({ automateSequenceIcons: enabled })}
+                              onStyleChange={handleStyleChange}
+                              onStageOverride={handleStageOverride}
+                            />
+                          }
+                          onGenerate={() => void handleGenerateSequence()}
+                          onDownloadZip={() => void handleDownloadZip()}
+                          onDownloadFrame={(frame) => saveDownload(frame.blob, frame.filename)}
+                          onOpenFrame={setOpenFrame}
+                        />
+
+                        <section className="customize-panel panel" aria-labelledby="adjust-heading">
+                          <div className="customize-panel__header">
+                            <h2 id="adjust-heading">Customize</h2>
+                            <button type="button" className="customize-panel__reset" onClick={resetSettings} disabled={busy !== null}>
+                              <span aria-hidden="true">↶</span>
+                              Reset
+                            </button>
+                          </div>
+                          <div className="customize-panel__grid">
+                            <ControlRange id="hourglass-size" label="Hourglass size" value={settings.hourglassSize} min={20} max={80} disabled={busy !== null} onChange={(value) => updateSettings({ hourglassSize: value })} />
+                            <ControlRange id="hourglass-position" label="Hourglass position" value={settings.hourglassCenterY} min={10} max={90} disabled={busy !== null} onChange={(value) => updateSettings({ hourglassCenterY: value })} />
+                            <ControlRange id="hourglass-opacity" label="Hourglass opacity" value={settings.hourglassOpacity} min={0} max={100} disabled={busy !== null} onChange={(value) => updateSettings({ hourglassOpacity: value })} />
+                            <ControlRange id="text-size" label="Text size" value={settings.textSize} min={8} max={30} disabled={busy !== null} onChange={(value) => updateSettings({ textSize: value })} />
+                            <ControlRange id="text-position" label="Text position" value={settings.textCenterY} min={55} max={92} disabled={busy !== null} onChange={(value) => updateSettings({ textCenterY: value })} />
+                            <ControlRange id="text-opacity" label="Text opacity" value={settings.textOpacity} min={0} max={100} disabled={busy !== null} onChange={(value) => updateSettings({ textOpacity: value })} />
+                            <ControlRange id="text-stroke-width" label="Text outline size" value={settings.textStrokeWidth} min={0} max={20} suffix="px" disabled={busy !== null} onChange={(value) => updateSettings({ textStrokeWidth: value })} />
+                            <ControlRange id="text-stroke-opacity" label="Text outline opacity" value={settings.textStrokeOpacity} min={0} max={100} disabled={busy !== null} onChange={(value) => updateSettings({ textStrokeOpacity: value })} />
+                            <ControlRange id="darken" label="Image darkening" value={settings.darken} min={0} max={100} hint="Only the uploaded image is affected." disabled={busy !== null} onChange={(value) => updateSettings({ darken: value })} />
+                          </div>
+                        </section>
+                      </div>
+                    ) : activeTool === "script-extractor" ? (
+                      <RbxScriptExtractor />
+                    ) : (
+                      <BatchImageTool key={activeTool} mode={activeTool} />
+                    )}
                   </div>
-                </div>
-              )}
-          </div>
 
-          <SequenceGallery
-              id="countdown"
-              frames={sequence}
-              canGenerate={canGenerate}
-              isGenerating={busy === "sequence"}
-              isZipping={busy === "zip"}
-              isStale={sequenceStale}
-              automationControls={
-                <SequenceAutomationControls
-                  enabled={settings.automateSequenceIcons}
-                  style={settings.hourglassStyle}
-                  stageOverrides={settings.stageOverrides}
-                  disabled={busy !== null}
-                  onEnabledChange={(enabled) =>
-                    updateSettings({ automateSequenceIcons: enabled })
-                  }
-                  onStyleChange={handleStyleChange}
-                  onStageOverride={handleStageOverride}
+                  {showFloatingPreview && hasSource && activeTool === "icon-maker" && (
+                    <div className="floating-preview">
+                      <button
+                        type="button"
+                        className="floating-preview__button"
+                        onClick={() => previewPanelRef.current?.scrollIntoView({ behavior: "smooth" })}
+                        aria-label="Jump to full preview"
+                      >
+                        <canvas ref={floatingPreviewCanvasRef} aria-hidden="true" />
+                        <span>Preview</span>
+                      </button>
+                    </div>
+                  )}
+            </section>
+          ) : (
+            <section className="tool-empty" aria-labelledby="empty-heading">
+              <img
+                className="tool-empty__logo"
+                src="/assets/creator-tools-logo-display.png"
+                alt="Creator Tools"
+              />
+              <div className="tool-empty__eyebrow">Creator tools</div>
+              <h1 id="empty-heading">
+                <SplitText
+                  text="Choose a tool"
+                  delay={220}
+                  duration={0.55}
+                  ease="power3.out"
+                  from={{ opacity: 0, y: 28 }}
+                  to={{ opacity: 1, y: 0 }}
+                  threshold={0.1}
+                  rootMargin="0px"
+                  textAlign="center"
                 />
-              }
-              onGenerate={() => void handleGenerateSequence()}
-              onDownloadZip={() => void handleDownloadZip()}
-              onDownloadFrame={(frame) => saveDownload(frame.blob, frame.filename)}
-              onOpenFrame={setOpenFrame}
-          />
-        </div>
+              </h1>
+              <p>Pick something from the sidebar to get started.</p>
+            </section>
+          )}
 
-        {showFloatingPreview && hasSource && (
-          <div className="floating-preview">
-            <button
-              type="button"
-              className="floating-preview__button"
-              onClick={() => previewPanelRef.current?.scrollIntoView({ behavior: "smooth" })}
-              aria-label="Jump to full preview"
-            >
-              <canvas ref={floatingPreviewCanvasRef} aria-hidden="true" />
-              <span>Preview</span>
-            </button>
-          </div>
-        )}
-
-        <footer className="app-footer">
-          <span>512 × 512 PNG output</span>
-          <span className="app-footer__line" aria-hidden="true" />
-          <span>Local render</span>
-        </footer>
-      </main>
+          <footer className="app-footer">
+            <span>Local image tools</span>
+            <span className="app-footer__line" aria-hidden="true" />
+            <span>Nothing leaves this device</span>
+          </footer>
+        </main>
+      </div>
 
       <FrameDialog
         frame={openFrame}

@@ -1,0 +1,409 @@
+@keyframes creator-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creator-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creator-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes creator-preview-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes creator-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creator-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes creator-dialog-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes creator-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes creator-scan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes creator-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes creator-confirm {
+  from {
+    opacity: 0.5;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.creator-tools-app .tool-workspace {
+  animation: creator-page-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .tool-workspace__heading {
+  opacity: 0;
+  animation: creator-fade-up 330ms cubic-bezier(0.22, 1, 0.36, 1) 35ms both;
+}
+
+.creator-tools-app .workspace-preview {
+  opacity: 0;
+  animation: creator-fade-up 380ms cubic-bezier(0.22, 1, 0.36, 1) 95ms both;
+}
+
+.creator-tools-app .tool-workspace > .app-alert,
+.creator-tools-app .asset-warning,
+.creator-tools-app .download-status,
+.creator-tools-app .batch-message,
+.creator-tools-app .rbx-tool__notice {
+  animation: creator-fade-up 230ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .tool-empty__eyebrow {
+  opacity: 0;
+  animation: creator-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) 560ms both;
+}
+
+.creator-tools-app .tool-empty h1 {
+  opacity: 0;
+  animation: creator-fade-up 320ms cubic-bezier(0.22, 1, 0.36, 1) 630ms both;
+}
+
+.creator-tools-app .tool-empty > p {
+  opacity: 0;
+  animation: creator-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) 740ms both;
+}
+
+.creator-tools-app .tool-navigation__item {
+  transition: transform 150ms ease, color 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.creator-tools-app .tool-navigation__item:hover:not(:disabled) {
+  transform: translateX(2px);
+}
+
+.creator-tools-app .button:not(:disabled),
+.creator-tools-app .rbx-button:not(:disabled) {
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.creator-tools-app .button:not(:disabled):active,
+.creator-tools-app .rbx-button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.creator-tools-app .drop-zone {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.creator-tools-app .drop-zone > :not(input) {
+  position: relative;
+  z-index: 1;
+}
+
+.creator-tools-app .drop-zone.is-loading::after,
+.creator-tools-app .batch-dropzone.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.035) 44%,
+    rgba(255, 255, 255, 0.13) 50%,
+    rgba(255, 255, 255, 0.035) 56%,
+    transparent 66%
+  );
+  transform: translateX(-100%);
+  animation: creator-scan 1.25s ease-in-out infinite;
+}
+
+.creator-tools-app .drop-zone.is-loading .drop-zone__icon {
+  animation: creator-breathe 1s ease-in-out infinite;
+}
+
+.creator-tools-app .source-meta {
+  animation: creator-fade-up 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .asset-card.is-selected {
+  animation: creator-confirm 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .canvas-frame canvas {
+  animation: creator-preview-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .canvas-empty {
+  animation: creator-fade-in 220ms ease both;
+}
+
+.creator-tools-app .automation-options {
+  transform-origin: top center;
+  animation: creator-panel-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .sequence-map > div {
+  opacity: 0;
+  animation: creator-fade-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .sequence-map > div:nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.creator-tools-app .sequence-map > div:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.creator-tools-app .sequence-map > div:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.creator-tools-app .stage-overrides[open] .stage-overrides__list {
+  animation: creator-panel-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .sequence-empty {
+  position: relative;
+  overflow: hidden;
+}
+
+.creator-tools-app .sequence-empty.is-generating::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 36%,
+    rgba(255, 255, 255, 0.035) 46%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.035) 54%,
+    transparent 64%
+  );
+  transform: translateX(-100%);
+  animation: creator-scan 1.3s ease-in-out infinite;
+}
+
+.creator-tools-app .sequence-loading-mark {
+  width: 34px;
+  height: 2px;
+  margin-bottom: 2px;
+  display: block;
+  border-radius: 999px;
+  background: #dddddd;
+  animation: creator-breathe 1s ease-in-out infinite;
+}
+
+.creator-tools-app .frame-card {
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.creator-tools-app .frame-card--enter {
+  opacity: 0;
+  animation: creator-card-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .frame-card:hover {
+  transform: translateY(-2px);
+}
+
+.creator-tools-app .frame-card__preview img {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.creator-tools-app .frame-card__preview:hover img {
+  transform: scale(1.02);
+}
+
+.creator-tools-app .text-button.is-saved {
+  color: var(--mint);
+  animation: creator-confirm 180ms ease both;
+}
+
+.creator-tools-app .dialog-backdrop {
+  animation: creator-dialog-backdrop-in 180ms ease both;
+}
+
+.creator-tools-app .frame-dialog {
+  animation: creator-dialog-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .batch-dropzone {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.creator-tools-app .batch-dropzone > :not(input) {
+  position: relative;
+  z-index: 1;
+}
+
+.creator-tools-app .batch-card--enter {
+  opacity: 0;
+  animation: creator-card-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .rbx-tool__topbar,
+.creator-tools-app .rbx-tool__stats,
+.creator-tools-app .rbx-tool__notice,
+.creator-tools-app .rbx-workspace {
+  opacity: 0;
+  animation: creator-fade-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .rbx-tool__stats {
+  animation-delay: 55ms;
+}
+
+.creator-tools-app .rbx-tool__notice {
+  animation-delay: 85ms;
+}
+
+.creator-tools-app .rbx-workspace {
+  animation-delay: 110ms;
+}
+
+.creator-tools-app .rbx-script-item--enter {
+  opacity: 0;
+  animation: creator-fade-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.creator-tools-app .rbx-script-viewer {
+  animation: creator-fade-in 220ms ease both;
+}
+
+.creator-tools-app .rbx-script-viewer pre {
+  animation: creator-fade-in 260ms ease 80ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .creator-tools-app .tool-workspace,
+  .creator-tools-app .tool-workspace__heading,
+  .creator-tools-app .workspace-preview,
+  .creator-tools-app .tool-empty__eyebrow,
+  .creator-tools-app .tool-empty h1,
+  .creator-tools-app .tool-empty > p,
+  .creator-tools-app .source-meta,
+  .creator-tools-app .asset-card.is-selected,
+  .creator-tools-app .canvas-frame canvas,
+  .creator-tools-app .canvas-empty,
+  .creator-tools-app .automation-options,
+  .creator-tools-app .sequence-map > div,
+  .creator-tools-app .stage-overrides[open] .stage-overrides__list,
+  .creator-tools-app .frame-card--enter,
+  .creator-tools-app .batch-card--enter,
+  .creator-tools-app .rbx-tool__topbar,
+  .creator-tools-app .rbx-tool__stats,
+  .creator-tools-app .rbx-tool__notice,
+  .creator-tools-app .rbx-workspace,
+  .creator-tools-app .rbx-script-item--enter,
+  .creator-tools-app .rbx-script-viewer,
+  .creator-tools-app .rbx-script-viewer pre,
+  .creator-tools-app .tool-workspace > .app-alert,
+  .creator-tools-app .asset-warning,
+  .creator-tools-app .download-status,
+  .creator-tools-app .batch-message {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .creator-tools-app .tool-navigation__item:hover:not(:disabled),
+  .creator-tools-app .button:not(:disabled):active,
+  .creator-tools-app .rbx-button:not(:disabled):active,
+  .creator-tools-app .frame-card:hover {
+    transform: none;
+  }
+
+  .creator-tools-app .drop-zone.is-loading::after,
+  .creator-tools-app .drop-zone.is-loading .drop-zone__icon,
+  .creator-tools-app .batch-dropzone.is-loading::after,
+  .creator-tools-app .sequence-empty.is-generating::after,
+  .creator-tools-app .sequence-loading-mark {
+    animation: none;
+  }
+}

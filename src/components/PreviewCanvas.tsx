@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 
 interface PreviewCanvasProps {
   canvasRef: RefObject<HTMLCanvasElement | null>;
+  canvasKey: string;
   panelRef?: RefObject<HTMLElement | null>;
   hasSource: boolean;
   overlayReady: boolean;
@@ -14,6 +15,7 @@ interface PreviewCanvasProps {
 
 export function PreviewCanvas({
   canvasRef,
+  canvasKey,
   panelRef,
   hasSource,
   overlayReady,
@@ -34,7 +36,7 @@ export function PreviewCanvas({
       </div>
 
       <div className="canvas-frame">
-        <canvas ref={canvasRef} aria-label="512 by 512 update icon preview" />
+          <canvas key={canvasKey} ref={canvasRef} aria-label="512 by 512 update icon preview" />
         {!hasSource && (
           <div className="canvas-empty">
             <strong>No image selected</strong>
@@ -57,14 +59,14 @@ export function PreviewCanvas({
               : "Choose an image to begin"}
           </div>
           {downloadMessage && (
-            <div className="download-status" role="status">
+            <div className="download-status" key={downloadMessage} role="status">
               {downloadMessage}
             </div>
           )}
         </div>
         <button
           type="button"
-          className="button button--mint"
+          className={`button button--mint${isBusy ? " is-busy" : ""}`}
           onClick={onDownload}
           disabled={!hasSource || !overlayReady || isBusy}
         >
