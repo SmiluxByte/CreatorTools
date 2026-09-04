@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { SplitText } from "./SplitText";
 
 export type ToolId = "icon-maker" | "resize" | "stroke" | "script-extractor";
 
@@ -57,7 +56,7 @@ export function ToolNavigation({ activeTool, onChange }: ToolNavigationProps) {
   return (
     <aside className="tool-navigation app-reveal app-reveal--sidebar" aria-label="Creator tools">
       <div className="tool-navigation__top">
-        <div className="tool-navigation__switch" aria-label="Creator tools">
+        <div className="tool-navigation__switch">
           <span className="tool-navigation__switch-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
@@ -67,7 +66,6 @@ export function ToolNavigation({ activeTool, onChange }: ToolNavigationProps) {
             </svg>
           </span>
           <strong>Creator tools</strong>
-          <span className="tool-navigation__switch-chevron" aria-hidden="true">⌄</span>
         </div>
         <div className="tool-navigation__search">
           <label className="visually-hidden" htmlFor={inputId}>
@@ -87,16 +85,7 @@ export function ToolNavigation({ activeTool, onChange }: ToolNavigationProps) {
 
       <nav className="tool-navigation__list" aria-label="Available tools">
         <div className="tool-navigation__group-label">
-          <SplitText
-            text="Most used tools"
-            delay={45}
-            duration={0.45}
-            ease="power3.out"
-            from={{ opacity: 0, y: 12 }}
-            to={{ opacity: 1, y: 0 }}
-            threshold={0.1}
-            rootMargin="0px"
-          />
+          Most used tools
         </div>
         {visibleTools.length > 0 ? (
           visibleTools.map((tool) => {
@@ -112,9 +101,6 @@ export function ToolNavigation({ activeTool, onChange }: ToolNavigationProps) {
               >
                 <span className="tool-navigation__copy">
                   <strong>{tool.label}</strong>
-                </span>
-                <span className="tool-navigation__arrow" aria-hidden="true">
-                  →
                 </span>
               </button>
             );

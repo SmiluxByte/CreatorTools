@@ -11,7 +11,6 @@ import { PreviewCanvas } from "./components/PreviewCanvas";
 import { RbxScriptExtractor } from "./components/RbxScriptExtractor";
 import { SequenceAutomationControls } from "./components/SequenceAutomationControls";
 import { SequenceGallery } from "./components/SequenceGallery";
-import { SplitText } from "./components/SplitText";
 import { UploadPanel } from "./components/UploadPanel";
 import {
   TOOL_DEFINITIONS,
@@ -691,21 +690,8 @@ export default function App() {
                 src={CREATOR_TOOLS_LOGO_DISPLAY}
                 alt="Creator Tools"
               />
-              <div className="tool-empty__eyebrow">Creator tools</div>
-              <h1 id="empty-heading">
-                <SplitText
-                  text="Choose a tool"
-                  delay={220}
-                  duration={0.55}
-                  ease="power3.out"
-                  from={{ opacity: 0, y: 28 }}
-                  to={{ opacity: 1, y: 0 }}
-                  threshold={0.1}
-                  rootMargin="0px"
-                  textAlign="center"
-                />
-              </h1>
-              <p>Pick something from the sidebar to get started.</p>
+              <h1 id="empty-heading">Choose a tool</h1>
+              <p>Select a tool from the sidebar to get started.</p>
             </section>
           )}
 

@@ -59,10 +59,6 @@ function ToolIcon({ tool }: { tool: (typeof TOOLS)[number]["id"] }) {
 export function HomePage({ onOpenTools }: HomePageProps) {
   return (
     <div className="home-page">
-      <div className="home-page__grid" aria-hidden="true" />
-      <div className="home-page__glow home-page__glow--top" aria-hidden="true" />
-      <div className="home-page__glow home-page__glow--logo" aria-hidden="true" />
-
       <header className="home-header">
         <a className="home-wordmark" href={import.meta.env.BASE_URL} aria-label="Creator Tools home">
           <img className="home-wordmark__mark" src={CREATOR_TOOLS_ICON} alt="" />
@@ -118,15 +114,11 @@ export function HomePage({ onOpenTools }: HomePageProps) {
                   <strong>{tool.name}</strong>
                   <small>{tool.detail}</small>
                 </span>
-                <span className="home-tool-card__arrow" aria-hidden="true">
-                  →
-                </span>
               </button>
             ))}
           </div>
           <button type="button" className="home-all-tools" onClick={() => onOpenTools()}>
             <span>View all tools</span>
-            <span aria-hidden="true">→</span>
           </button>
         </section>
       </main>
