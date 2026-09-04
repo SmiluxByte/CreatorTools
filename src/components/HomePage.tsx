@@ -1,6 +1,8 @@
 import { BrandMark } from "./BrandMark";
 import type { ToolId } from "./ToolNavigation";
 
+const CREATOR_TOOLS_LOGO = `${import.meta.env.BASE_URL}assets/creator-tools-logo.png`;
+
 interface HomePageProps {
   onOpenTools: (tool?: ToolId) => void;
 }
@@ -62,7 +64,7 @@ export function HomePage({ onOpenTools }: HomePageProps) {
       <div className="home-page__glow home-page__glow--logo" aria-hidden="true" />
 
       <header className="home-header">
-        <a className="home-wordmark" href="/" aria-label="Creator Tools home">
+        <a className="home-wordmark" href={import.meta.env.BASE_URL} aria-label="Creator Tools home">
           <BrandMark className="home-wordmark__mark" />
           <span>
             <strong>Patchglass</strong>
@@ -82,7 +84,7 @@ export function HomePage({ onOpenTools }: HomePageProps) {
           <div className="home-logo-stage">
             <img
               className="home-logo"
-              src="/assets/creator-tools-logo.png"
+              src={CREATOR_TOOLS_LOGO}
               alt="Creator Tools"
             />
           </div>

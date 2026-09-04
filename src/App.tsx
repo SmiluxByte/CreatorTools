@@ -40,6 +40,9 @@ import type {
   SequenceFrame,
 } from "./types";
 
+const CREATOR_TOOLS_LOGO = `${import.meta.env.BASE_URL}assets/creator-tools-logo.png`;
+const CREATOR_TOOLS_LOGO_DISPLAY = `${import.meta.env.BASE_URL}assets/creator-tools-logo-display.png`;
+
 type BusyState = "single" | "sequence" | "zip" | null;
 
 function createAssetStatusMap(): Record<string, AssetStatus> {
@@ -436,7 +439,7 @@ export default function App() {
     <div className="app-shell creator-tools-app">
       <header className="app-header app-reveal app-reveal--header">
         <a className="brand brand--logo" href="#tools" aria-label="Creator Tools home">
-          <img src="/assets/creator-tools-logo.png" alt="Creator Tools" />
+          <img src={CREATOR_TOOLS_LOGO} alt="Creator Tools" />
         </a>
         <div className="header-tools">
           <span className="header-note">
@@ -685,7 +688,7 @@ export default function App() {
             <section className="tool-empty" aria-labelledby="empty-heading">
               <img
                 className="tool-empty__logo"
-                src="/assets/creator-tools-logo-display.png"
+                src={CREATOR_TOOLS_LOGO_DISPLAY}
                 alt="Creator Tools"
               />
               <div className="tool-empty__eyebrow">Creator tools</div>
