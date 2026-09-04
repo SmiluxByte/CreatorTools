@@ -4,6 +4,8 @@ import { COUNTDOWN_STAGES } from "./config/countdown";
 import { FONT_OPTIONS } from "./config/fonts";
 import { DEFAULT_SETTINGS } from "./config/settings";
 import { BatchImageTool } from "./components/BatchImageTool";
+import { BatchConvertTool } from "./components/BatchConvertTool";
+import { BatchRenameTool } from "./components/BatchRenameTool";
 import { ControlRange } from "./components/ControlRange";
 import { FrameDialog } from "./components/FrameDialog";
 import { PresetControls } from "./components/PresetControls";
@@ -11,6 +13,7 @@ import { PreviewCanvas } from "./components/PreviewCanvas";
 import { RbxScriptExtractor } from "./components/RbxScriptExtractor";
 import { SequenceAutomationControls } from "./components/SequenceAutomationControls";
 import { SequenceGallery } from "./components/SequenceGallery";
+import { SvgEditor } from "./components/SvgEditor";
 import { UploadPanel } from "./components/UploadPanel";
 import {
   TOOL_DEFINITIONS,
@@ -463,7 +466,13 @@ export default function App() {
                       ? "Batch resize"
                       : activeTool === "stroke"
                         ? "Batch stroke"
-                        : "RBX source extractor"}
+                        : activeTool === "convert"
+                          ? "Batch convert"
+                          : activeTool === "rename"
+                            ? "Batch rename"
+                            : activeTool === "svg-editor"
+                              ? "SVG editor"
+                              : "RBX source extractor"}
                 </h1>
                 <p>
                   {activeTool === "icon-maker"
@@ -472,7 +481,13 @@ export default function App() {
                       ? "Resize several images at once without leaving your browser."
                       : activeTool === "stroke"
                         ? "Apply one clean outline to several transparent images at once."
-                        : "Open an .rbxlx, keep its folders, and export the scripts for an LLM."}
+                        : activeTool === "convert"
+                          ? "Convert a batch of images to PNG, JPG or WebP on your device."
+                          : activeTool === "rename"
+                            ? "Give a group of files consistent names without opening a file manager."
+                            : activeTool === "svg-editor"
+                              ? "Recolor SVG icons and adjust their strokes in a few clicks."
+                              : "Open an .rbxlx, keep its folders, and export the scripts for an LLM."}
                 </p>
               </div>
 
@@ -664,6 +679,12 @@ export default function App() {
                       </div>
                     ) : activeTool === "script-extractor" ? (
                       <RbxScriptExtractor />
+                    ) : activeTool === "convert" ? (
+                      <BatchConvertTool />
+                    ) : activeTool === "rename" ? (
+                      <BatchRenameTool />
+                    ) : activeTool === "svg-editor" ? (
+                      <SvgEditor />
                     ) : (
                       <BatchImageTool key={activeTool} mode={activeTool} />
                     )}

@@ -1,6 +1,13 @@
 import { useEffect, useId, useRef, useState } from "react";
 
-export type ToolId = "icon-maker" | "resize" | "stroke" | "script-extractor";
+export type ToolId =
+  | "icon-maker"
+  | "resize"
+  | "stroke"
+  | "convert"
+  | "rename"
+  | "svg-editor"
+  | "script-extractor";
 
 export interface ToolDefinition {
   id: ToolId;
@@ -12,6 +19,9 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   { id: "icon-maker", label: "Hourglass", description: "Countdown update icons" },
   { id: "resize", label: "Batch Resize", description: "Exact output sizes" },
   { id: "stroke", label: "Batch Stroke", description: "Outlines for PNGs" },
+  { id: "convert", label: "Batch Convert", description: "Change image formats" },
+  { id: "rename", label: "Batch Rename", description: "Rename files together" },
+  { id: "svg-editor", label: "SVG Editor", description: "Quick vector color edits" },
   { id: "script-extractor", label: "RBX Source Extractor", description: "Scripts for LLMs" },
 ];
 

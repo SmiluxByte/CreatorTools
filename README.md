@@ -1,6 +1,6 @@
 # Creator Tools
 
-Creator Tools is a local-first browser toolkit for Roblox and game-asset workflows. It collects the small tools creators actually need in one fast, private page: Hourglass countdown graphics, batch image processing, and Roblox source extraction.
+Creator Tools is a local-first browser toolkit for the small file and image jobs that are annoying to do elsewhere. It includes quick batch image processing, SVG color edits, filename cleanup, Hourglass countdown graphics, and Roblox source extraction.
 
 Repository: [github.com/SmiluxByte/CreatorTools](https://github.com/SmiluxByte/CreatorTools)
 
@@ -25,6 +25,9 @@ The site is deployed from `main` with GitHub Pages. Developers can still run the
 - Contain, cover and stretch modes for resizing
 - Alpha-based batch strokes with adjustable color, size and opacity
 - Optional resize-before-stroke for icons such as 1512 × 1512 → 256 × 256
+- Batch conversion between PNG, JPG and WebP with quality and transparency handling
+- Batch filename patterns with numbered output previews
+- SVG quick editor for recoloring fills/strokes and adjusting stroke width
 - Batch previews and ZIP export for every image tool
 - RBX Source Extractor for local `.rbxlx` and `.rbxmx` place/model files
 - No account, backend or image upload required
