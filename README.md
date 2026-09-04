@@ -1,12 +1,12 @@
-# Patchglass
+# Creator Tools
 
-Patchglass is a local browser toolkit for Roblox and game-asset images. The Hourglass tool creates countdown update graphics; Batch Resize and Batch Stroke handle multiple images at once.
+Creator Tools is a local-first browser toolkit for Roblox and game-asset workflows. It collects the small tools creators actually need in one fast, private page: Hourglass countdown graphics, batch image processing, and Roblox source extraction.
 
-Repository: [github.com/SmiluxByte/IconMaker](https://github.com/SmiluxByte/IconMaker)
+Repository: [github.com/SmiluxByte/CreatorTools](https://github.com/SmiluxByte/CreatorTools)
 
 ## Use it online
 
-Open [Patchglass in your browser](https://smiluxbyte.github.io/IconMaker/). No Node.js or installation is needed for the online version.
+Open [Creator Tools in your browser](https://smiluxbyte.github.io/CreatorTools/). No Node.js or installation is needed for the online version.
 
 The site is deployed from `main` with GitHub Pages. Developers can still run the project locally using the instructions below.
 
