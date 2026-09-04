@@ -1,4 +1,4 @@
-name: Deploy Patchglass
+name: Deploy Creator Tools
 
 on:
   push:

@@ -318,7 +318,7 @@ export function BatchImageTool({ mode }: BatchImageToolProps) {
     setError(null);
     try {
       const zip = await createFilesZip(files);
-      downloadBlob(zip, `patchglass-${mode}.zip`);
+      downloadBlob(zip, `creator-tools-${mode}.zip`);
       setMessage(`Saved ${files.length} PNG${files.length === 1 ? "" : "s"} as ZIP.`);
     } catch (exportError) {
       setError(exportError instanceof Error ? exportError.message : "The ZIP could not be created.");
@@ -336,7 +336,7 @@ export function BatchImageTool({ mode }: BatchImageToolProps) {
     <section className="batch-tool" aria-labelledby="batch-tool-heading">
       <div className="batch-tool__heading">
         <div>
-          <div className="section-label">Patchglass tool</div>
+          <div className="section-label">Creator Tools</div>
           <h2 id="batch-tool-heading">{copy.title}</h2>
           <p>{copy.description}</p>
         </div>

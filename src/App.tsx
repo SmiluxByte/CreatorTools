@@ -40,8 +40,8 @@ import type {
   SequenceFrame,
 } from "./types";
 
-const CREATOR_TOOLS_LOGO = `${import.meta.env.BASE_URL}assets/creator-tools-logo.png`;
 const CREATOR_TOOLS_LOGO_DISPLAY = `${import.meta.env.BASE_URL}assets/creator-tools-logo-display.png`;
+const CREATOR_TOOLS_ICON = `${import.meta.env.BASE_URL}assets/creator-tools-icon.png`;
 
 type BusyState = "single" | "sequence" | "zip" | null;
 
@@ -102,7 +102,7 @@ export default function App() {
   useEffect(() => {
     document.title = activeDefinition
       ? `${activeDefinition.label} · Creator Tools`
-      : "Creator Tools · Patchglass";
+      : "Creator Tools";
   }, [activeDefinition]);
 
   useEffect(() => {
@@ -398,7 +398,7 @@ export default function App() {
     setError(null);
     try {
       const zipBlob = await createSequenceZip(sequence);
-      saveDownload(zipBlob, "patchglass-countdown.zip");
+      saveDownload(zipBlob, "creator-tools-countdown.zip");
     } catch (zipError) {
       setError(getErrorMessage(zipError, "The ZIP could not be created. Try again."));
     } finally {
@@ -439,7 +439,7 @@ export default function App() {
     <div className="app-shell creator-tools-app">
       <header className="app-header app-reveal app-reveal--header">
         <a className="brand brand--logo" href="#tools" aria-label="Creator Tools home">
-          <img src={CREATOR_TOOLS_LOGO} alt="Creator Tools" />
+          <img src={CREATOR_TOOLS_ICON} alt="Creator Tools" />
         </a>
         <div className="header-tools">
           <span className="header-note">
